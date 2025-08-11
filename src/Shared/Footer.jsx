@@ -132,6 +132,7 @@ const Footer = () => {
                 placeholder="Your email address"
                 className="bg-[#1e293b] border border-cyan-900/30 text-sm rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 w-full transition-all duration-300 hover:border-cyan-500/30"
               />
+              <Link to='/auth/register'>
               <button
                 type="submit"
                 className="relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-cyan-500/20 w-full group"
@@ -144,6 +145,7 @@ const Footer = () => {
                 </span>
                 <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </button>
+              </Link>
             </form>
           </motion.div>
 
