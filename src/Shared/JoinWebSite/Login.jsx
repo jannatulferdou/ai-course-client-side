@@ -1,6 +1,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash, FaFacebookF, FaTwitter, FaGoogle, FaLinkedinIn, FaGithub } from 'react-icons/fa';
+
+import { FaEye, FaEyeSlash, FaFacebookF, FaTwitter, FaGoogle, FaLinkedinIn, FaGithub, FaSpinner } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import Lottie from 'lottie-react';
 import { AuthContext } from '../Provider/AuthProvider';
@@ -11,12 +12,14 @@ const Login = () => {
   const { createSignIn, resetPassword, googleSignIn, githubSignIn} = useContext(AuthContext);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const emailRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
@@ -39,6 +42,9 @@ const Login = () => {
       .catch((error) => {
        setError(error.message);
         toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false); 
       });
   };
 
@@ -181,11 +187,18 @@ const Login = () => {
             </div>
 
             <button
-              type="submit"
-              className="btn w-full border-hidden bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-400 hover:to-blue-500 text-white font-medium py-2 px-4 rounded-md transition-all transform shadow-lg"
-            >
-              LOGIN
-            </button>
+        type="submit"
+        disabled={loading}
+        className="btn w-full border-hidden bg-gradient-to-r from-cyan-500 to-blue-700 hover:from-cyan-400 hover:to-blue-500 text-white font-medium py-2 px-4 rounded-md transition-all transform shadow-lg flex justify-center items-center gap-2"
+      >
+        {loading ? (
+          <>
+            <FaSpinner className="animate-spin" /> Logging in...
+          </>
+        ) : (
+          'LOGIN'
+        )}
+      </button>
           </form>
 
           <div className="relative my-6">
