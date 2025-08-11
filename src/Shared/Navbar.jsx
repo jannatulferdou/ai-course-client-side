@@ -130,7 +130,7 @@ const Navbar = () => {
     
   </>
   return (
-    <div className="absolute top-0 left-0 w-full z-50">
+    <div className="fixed top-0 left-0 w-full z-50">
       <div className="navbar px-4 lg:px-12 py-5 font-medium bg-gray-900/60 text-white backdrop-blur-md">
         {/* Navbar Start */}
         <div className="navbar-start">

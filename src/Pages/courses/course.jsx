@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowRight, Clock, Calendar, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router";
 import { useInView } from "react-intersection-observer";
@@ -19,7 +18,7 @@ const CourseCard = ({ course, index }) => {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8 }}
-      className="relative group rounded-xl overflow-hidden bg-white/5 backdrop-blur-md border border-cyan-400/10 hover:border-cyan-400/30 transition-all duration-300 shadow-md hover:shadow-cyan-500/30"
+      className="relative group rounded-xl overflow-hidden bg-white/5 backdrop-blur-md border border-cyan-400/10 hover:border-cyan-400/30 transition-all duration-300 shadow-md hover:shadow-cyan-500/30 h-full flex flex-col"
     >
       <div className="relative h-72 overflow-hidden">
         <img
@@ -59,7 +58,10 @@ const CourseCard = ({ course, index }) => {
               whileTap={{ scale: 0.95 }}
               className="items-center text-sm bg-gradient-to-r from-cyan-500 to-indigo-600 text-white p-2 rounded-full w-8 h-8 shadow-md hover:shadow-cyan-500/30 transition-all"
             >
-              <MdKeyboardArrowRight size={20} className="relative right-0.5 bottom-0.5" />
+              <MdKeyboardArrowRight
+                size={20}
+                className="relative right-0.5 bottom-0.5"
+              />
             </motion.button>
           </Link>
         </div>
@@ -90,11 +92,14 @@ const Courses = () => {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const [showAll, setShowAll] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://ai-course-server.vercel.app/courses");
+        const response = await axios.get(
+          "https://ai-course-server.vercel.app/courses"
+        );
         setCourses(response.data);
       } catch (err) {
         console.error("Error fetching courses:", err);
@@ -120,7 +125,18 @@ const Courses = () => {
             course.category === activeFilter.toLowerCase().replace(/ /g, "-")
         );
 
-  const visibleCourses = showAll ? filteredCourses : filteredCourses.slice(0, 6);
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    if (sortOrder === "asc") {
+      return parseFloat(a.price) - parseFloat(b.price);
+    } else if (sortOrder === "desc") {
+      return parseFloat(b.price) - parseFloat(a.price);
+    }
+    return 0;
+  });
+
+  const visibleCourses = showAll
+    ? sortedCourses
+    : sortedCourses.slice(0, 6);
 
   if (loading) return <Loading />;
   if (error)
@@ -135,7 +151,7 @@ const Courses = () => {
         className="max-w-7xl mx-auto"
       >
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -171,7 +187,7 @@ const Courses = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
+          className="flex flex-wrap justify-center gap-4 mb-6"
         >
           {categories.map((category) => (
             <CategoryButton
@@ -186,9 +202,33 @@ const Courses = () => {
           ))}
         </motion.div>
 
+        {/* Sorting Buttons */}
+        <div className="flex justify-center mb-10 gap-4">
+          <button
+            onClick={() => setSortOrder("asc")}
+            className={`px-4 py-2 border rounded ${
+              sortOrder === "asc"
+                ? "bg-cyan-600 text-white"
+                : "bg-transparent text-cyan-400"
+            }`}
+          >
+            Price ↑
+          </button>
+          <button
+            onClick={() => setSortOrder("desc")}
+            className={`px-4 py-2 border rounded ${
+              sortOrder === "desc"
+                ? "bg-cyan-600 text-white"
+                : "bg-transparent text-cyan-400"
+            }`}
+          >
+            Price ↓
+          </button>
+        </div>
+
         {/* Course Grid */}
         {visibleCourses.length > 0 ? (
-          <div className="grid gap-10 grid md:grid-cols-2 lg:grid-cols-3">
+          <div className="gap-10 grid md:grid-cols-2 lg:grid-cols-3 items-stretch">
             {visibleCourses.map((course, index) => (
               <CourseCard key={course._id} course={course} index={index} />
             ))}
@@ -200,7 +240,7 @@ const Courses = () => {
         )}
 
         {/* View All Button */}
-        {!showAll && filteredCourses.length > 6 && (
+        {!showAll && sortedCourses.length > 6 && (
           <motion.div
             className="flex justify-center mt-20"
             initial={{ opacity: 0 }}
