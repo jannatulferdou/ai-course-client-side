@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash, FaFacebookF, FaTwitter, FaGoogle, FaLinkedinIn, FaGithub } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle, FaGithub } from 'react-icons/fa';
 import { AuthContext } from '../Provider/AuthProvider';
 import Swal from 'sweetalert2';
 import Lottie from 'lottie-react';
@@ -15,6 +15,7 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState('');
   const [showPasswordRules, setShowPasswordRules] = useState(false);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false); // spinner state
   const navigate = useNavigate();
 
   const hasUppercase = /[A-Z]/.test(password);
@@ -24,7 +25,6 @@ const Register = () => {
   const isLongEnough = password.length >= 8;
   const notContainsEmail = email ? !password.includes(email.split('@')[0]) : true;
   const passwordsMatch = password === confirmPassword;
-
   const allValid = hasUppercase && hasLowercase && hasNumber && hasSpecialChar && isLongEnough && notContainsEmail && passwordsMatch;
 
   const handleRegister = (e) => {
@@ -45,6 +45,7 @@ const Register = () => {
     }
 
     setPasswordError('');
+    setLoading(true); // start spinner
 
     createUser(email, password)
       .then(result => {
@@ -73,10 +74,12 @@ const Register = () => {
           color: 'white',
           iconColor: '#ef4444',
         });
-      });
+      })
+      .finally(() => setLoading(false)); // stop spinner
   };
 
   const handleGoogleLogin = () => {
+    setLoading(true);
     googleSignIn()
       .then(result => {
         Swal.fire({
@@ -99,33 +102,37 @@ const Register = () => {
           color: 'white',
           iconColor: '#ef4444',
         });
-      });
+      })
+      .finally(() => setLoading(false));
   };
-const handleSignInWithGithub = () => {
-  githubSignIn()
-    .then(result => {
-      Swal.fire({
-        title: 'GitHub Login Successful!',
-        text: `Welcome, ${result.user.displayName || 'User'}!`,
-        icon: 'success',
-        confirmButtonText: 'Continue',
-        background: '#0f172a',
-        color: 'white',
-        iconColor: '#f59e0b',
-      }).then(() => navigate('/'));
-    })
-    .catch(error => {
-      Swal.fire({
-        title: 'GitHub Login Failed!',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'Try Again',
-        background: '#0f172a',
-        color: 'white',
-        iconColor: '#ef4444',
-      });
-    });
-};
+
+  const handleSignInWithGithub = () => {
+    setLoading(true);
+    githubSignIn()
+      .then(result => {
+        Swal.fire({
+          title: 'GitHub Login Successful!',
+          text: `Welcome, ${result.user.displayName || 'User'}!`,
+          icon: 'success',
+          confirmButtonText: 'Continue',
+          background: '#0f172a',
+          color: 'white',
+          iconColor: '#f59e0b',
+        }).then(() => navigate('/'));
+      })
+      .catch(error => {
+        Swal.fire({
+          title: 'GitHub Login Failed!',
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+          background: '#0f172a',
+          color: 'white',
+          iconColor: '#ef4444',
+        });
+      })
+      .finally(() => setLoading(false));
+  };
 
   const calculateStrength = () => {
     let strength = 0;
@@ -146,16 +153,14 @@ const handleSignInWithGithub = () => {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-gray-900 to-[#0f172a]">
       <div className="w-full lg:w-1/2 bg-[#0f172a] flex justify-center items-center p-8 py-20 pt-30 relative overflow-hidden">
+        {/* Left section */}
         <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
           <Lottie animationData={login} loop={true} className="w-full h-full object-cover" />
         </div>
 
         <div className="w-full max-w-md relative z-10">
           <div className="flex justify-center mb-6">
-            <div className="relative">
-              <h2 className="text-3xl text-center mb-2 font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-white tracking-tight">NeuroNest</h2>
-              <div className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500 to-transparent"></div>
-            </div>
+            <h2 className="text-3xl text-center mb-2 font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-white tracking-tight">NeuroNest</h2>
           </div>
 
           <p className="text-center text-gray-400 mb-6 text-lg tracking-wider">
@@ -232,7 +237,17 @@ const handleSignInWithGithub = () => {
 
             {passwordError && <p className="text-red-400 text-xs">{passwordError}</p>}
 
-            <button type="submit" className="btn w-full bg-gradient-to-r from-cyan-500 to-blue-700 text-white py-2 px-4 rounded-md shadow-lg">CREATE ACCOUNT</button>
+            <button
+              type="submit"
+              className="btn w-full bg-gradient-to-r from-cyan-500 to-blue-700 text-white py-2 px-4 rounded-md shadow-lg flex justify-center items-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                'CREATE ACCOUNT'
+              )}
+            </button>
           </form>
 
           <div className="relative my-6">
@@ -245,12 +260,12 @@ const handleSignInWithGithub = () => {
           </div>
 
           <div className="flex justify-center gap-3 mb-6">
-             <button onClick={handleSignInWithGithub} className="btn btn-sm bg-[#1f3767] hover:bg-[#344e86] text-white transform hover:scale-105 transition-transform border-hidden">
-                          <FaGithub />
-                        </button>
-           
-            <button onClick={handleGoogleLogin} className="btn btn-sm bg-[#ea4335] text-white"><FaGoogle /></button>
-            
+            <button onClick={handleSignInWithGithub} className="btn btn-sm bg-[#1f3767] hover:bg-[#344e86] text-white">
+              <FaGithub />
+            </button>
+            <button onClick={handleGoogleLogin} className="btn btn-sm bg-[#ea4335] text-white">
+              <FaGoogle />
+            </button>
           </div>
 
           <p className="text-center text-sm text-gray-400">
@@ -260,16 +275,13 @@ const handleSignInWithGithub = () => {
         </div>
       </div>
 
+      {/* Right section */}
       <div className="hidden lg:flex w-full lg:w-1/2 bg-gradient-to-br from-[#0f172a] to-gray-900 text-white flex-col justify-center items-center px-10 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/grid-me.png')]"></div>
-        <div className="absolute top-20 right-20 w-16 h-16 rounded-full bg-cyan-500 opacity-20 blur-xl"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-24 h-24 rounded-full bg-blue-500 opacity-15 blur-xl"></div>
-
         <div className="max-w-lg text-center relative z-10">
           <h1 className="text-5xl font-extrabold mb-4">WELCOME TO <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-white">NeuroNest</span></h1>
-          <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 to-transparent mx-auto"></div>
           <p className="text-gray-300 leading-relaxed text-lg mt-4">
-            Join our cutting-edge platform where technology meets innovation. Connect with like-minded developers, share knowledge, and grow together in our tech ecosystem.
+            Join our cutting-edge platform where technology meets innovation.
           </p>
         </div>
       </div>
