@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaCookieBite, FaRegClock, FaLock, FaListUl, FaQuestionCircle } from 'react-icons/fa';
+import Loading from '../Shared/Loading/Loading';
 
 const Cookies = () => {
+    const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <section className="relative bg-gradient-to-br from-[#0c0c1d] to-[#1f2937] text-white py-24 px-6 pt-30 md:px-16 lg:px-32 overflow-hidden">
       {/* Background glow */}

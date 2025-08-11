@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaSpinner } from 'react-icons/fa';
 
 const CourseForm = () => {
 
@@ -41,6 +42,7 @@ const CourseForm = () => {
 
  
   const [formData, setFormData] = useState(initialFormState);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -86,6 +88,7 @@ const CourseForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const finalData = {
       ...formData,
       tags: formData.tags.split(",").map(tag => tag.trim())
@@ -102,6 +105,8 @@ const CourseForm = () => {
     } catch (error) {
       console.error("Error adding course:", error);
       toast.error("Failed to add course. Please try again.");
+    }finally {
+      setLoading(false);  
     }
   };
 
@@ -219,8 +224,19 @@ const CourseForm = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 rounded-lg transition duration-300">
-            Add Course
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-3 rounded-lg transition duration-300 flex justify-center items-center gap-2 ${loading ? 'cursor-not-allowed opacity-70' : ''}`}
+          >
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin" />
+                Adding...
+              </>
+            ) : (
+              "Add Course"
+            )}
           </button>
         </form>
       </div>

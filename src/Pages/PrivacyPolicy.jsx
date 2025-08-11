@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaLock, FaUserShield, FaServer, FaEnvelopeOpenText } from 'react-icons/fa';
+import Loading from '../Shared/Loading/Loading';
 
 const PrivacyPolicy = () => {
+    const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <section className="bg-gradient-to-b from-[#0f172a] to-[#0a0a0a] text-white py-24 px-6 md:px-16 lg:px-32 relative overflow-hidden">
       

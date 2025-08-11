@@ -22,8 +22,11 @@ import Loading from "../../Shared/Loading/Loading";
 const EditCourseForm = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
 
   useEffect(() => {
+    console.log("EditCourseForm loaded with ID:", id);
     axios.get(`https://ai-course-server.vercel.app/courses/${id}`)
       .then((res) => setFormData(res.data))
       .catch(() => Swal.fire("Error", "Failed to load course data", "error"));
@@ -72,23 +75,32 @@ const EditCourseForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updatedData = {
-      ...formData,
-      tags: typeof formData.tags === "string"
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSubmitting(true);
+
+
+  const { _id, ...dataWithoutId } = formData;
+
+  const updatedData = {
+    ...dataWithoutId,
+    tags:
+      typeof formData.tags === "string"
         ? formData.tags.split(",").map((tag) => tag.trim())
         : formData.tags,
-    };
-
-    try {
-      await axios.put(`https://ai-course-server.vercel.app/courses/${id}`, updatedData);
-      Swal.fire("Success", "Course updated successfully!", "success");
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "Failed to update course", "error");
-    }
   };
+
+  try {
+    await axios.put(`https://ai-course-server.vercel.app/courses/${id}`, updatedData);
+    Swal.fire("Success", "Course updated successfully!", "success");
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error", "Failed to update course", "error");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   if (!formData)
     return <Loading></Loading>;
@@ -180,9 +192,14 @@ const EditCourseForm = () => {
             </div>
 
             <div className="text-center">
-              <button type="submit" className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-lg px-10 py-3 rounded-full transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mx-auto">
-                <FaSave /> Update Course
-              </button>
+              <button
+  type="submit"
+  disabled={submitting}
+  className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-lg px-10 py-3 rounded-full transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {submitting ? 'Updating...' : (<><FaSave /> Update Course</>)}
+</button>
+
             </div>
           </form>
         </div>

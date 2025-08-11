@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import Loading from '../Shared/Loading/Loading';
 
 const contactMethods = [
   {
@@ -21,6 +22,17 @@ const contactMethods = [
 ];
 
 const Contact = () => {
+    const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <section className="relative bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#020617] text-white py-24 pt-30 px-6 lg:px-20 overflow-hidden">
       {/* Glowing background */}

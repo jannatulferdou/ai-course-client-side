@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGavel, FaRegFileAlt } from 'react-icons/fa';
+import Loading from '../Shared/Loading/Loading';
 
 const Terms = () => {
+    const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <section className="bg-[#0f172a] text-white py-24 px-6 md:px-16 lg:px-32 relative overflow-hidden">
       {/* Glow Effects */}

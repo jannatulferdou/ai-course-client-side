@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown, FaCertificate, FaQuestionCircle, FaUserGraduate, FaHandsHelping, FaRobot, FaUsers, FaEnvelopeOpenText } from 'react-icons/fa';
+import Loading from '../Shared/Loading/Loading';
 
 const faqData = [
   {
@@ -48,11 +49,23 @@ const faqData = [
 ];
 
 const Faq = () => {
+    const [loading, setLoading] = useState(true);
+
+  
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleFAQ = (index) => {
     setOpenIndex(index === openIndex ? null : index);
   };
+  useEffect(() => {
+    
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <section className="bg-[#0f172a] text-white py-20 pt-30 px-4 md:px-10 lg:px-24 ">

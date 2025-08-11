@@ -7,24 +7,28 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { RiGraduationCapLine } from "react-icons/ri";
 import { AiOutlineEye } from "react-icons/ai";
 import { AuthContext } from "../../Shared/Provider/AuthProvider"; 
+import Loading from "../../Shared/Loading/Loading";
 
 const ManageCourses = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true)
   const { user } = useContext(AuthContext); 
   const userEmail = user?.email;
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!userEmail) return;
-
+    setLoading(true);
     axios.get(`https://ai-course-server.vercel.app/my-courses?email=${userEmail}`, {
   withCredentials: true,
 })
   .then(res => {
     setCourses(res.data);
+    setLoading(false);
   })
   .catch(error => {
     console.error("Failed to fetch user courses:", error);
+    setLoading(false);
   });
   }, [userEmail]);
 
@@ -47,6 +51,10 @@ const ManageCourses = () => {
       }
     });
   };
+
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
   return (
     <div className="min-h-screen pt-35 px-4 py-10 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#020617] text-white">
