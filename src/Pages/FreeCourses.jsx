@@ -103,7 +103,7 @@ const FreeCourses = () => {
   };
 
   return (
-    <section className="relative min-h-screen text-white py-20 px-6 md:px-12 overflow-hidden">
+    <section className="relative min-h-screen text-white py-20 px-6 lg:px-15 md:px-12 overflow-hidden">
       <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-14 bg-gradient-to-r from-cyan-300 via-blue-500 to-blue-700 text-transparent bg-clip-text">
         💡 Explore Our Free AI Courses
       </h2>

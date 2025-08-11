@@ -13,7 +13,7 @@ const PopularCourse = () => {
   }, []);
 
   return (
-    <section className="py-16 px-4 md:px-10 lg:px-20 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white">
+    <section className="py-16 px-4 md:px-10 lg:px-15 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white">
       <h2 className="text-4xl font-bold mb-12 text-center text-cyan-400 drop-shadow-lg">
         ⚡ Top Enrolled Courses
       </h2>

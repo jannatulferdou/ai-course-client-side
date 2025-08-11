@@ -44,7 +44,7 @@ const services = [
 const ServiceSection = () => {
   return (
     <section className="py-16 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#020617] text-white">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-15">
         {/* Heading */}
         <motion.h2
           initial={{ opacity: 0, y: -20 }}

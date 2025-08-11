@@ -42,7 +42,7 @@ const OurCourseSuccess = () => {
       {/* Glowing Particles Background */}
       <div className="absolute inset-0 opacity-30 pointer-events-none z-0"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-15 text-center">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
