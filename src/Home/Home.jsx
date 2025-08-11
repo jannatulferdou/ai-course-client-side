@@ -7,6 +7,7 @@ import LatestCourse from '../Pages/LatestCourse';
 import PopularCourse from '../Pages/Popular/PopularCourse';
 import Review from '../Pages/Review';
 import OurCourseSuccess from '../Pages/ScuccessRate';
+import Service from '../Pages/Service';
 
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
             <Courses></Courses>
             <LatestCourse></LatestCourse>
             <PopularCourse></PopularCourse>
+            <Service></Service>
             <Review></Review>
             <OurCourseSuccess></OurCourseSuccess>
             

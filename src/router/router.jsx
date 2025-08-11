@@ -29,6 +29,7 @@ import AuthLayout from '../AuthLayout/AuthLayout';
 import UserProfile from '../Pages/UserProfile/UserProfile';
 import PrivateRoute from '../Shared/Provider/PriveteRoute';
 import UpdateProfile from '../Pages/UserProfile/UpdateProfile';
+import Service from '../Pages/Service';
 
 
 
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
             Component:Cookies
 
         },
+        {
+            path:'/service',
+            Component:Service
+        }
        
      
     ]
