@@ -102,15 +102,19 @@ This platform helps students:
 
 ## ⚙️ Installation
 
-Clone the repository
+Clone the repository:
+
 git clone https://github.com/jannatulferdou/ai-course-client-side.git
 
-Navigate to the project directory
+Navigate to the project directory:
+
 cd ai-course-client-side
 
-Install dependencies
+Install dependencies:
+
 npm install
 
-Run the development server
+Run the development server:
+
 npm run dev
 
