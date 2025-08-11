@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRobot, FaShieldAlt, FaChalkboardTeacher, FaUsers, FaRocket, FaBrain } from 'react-icons/fa';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router';
+import Loading from './Loading/Loading';
 
 const features = [
   {
@@ -29,6 +30,18 @@ const features = [
 ];
 
 const AboutUs = () => {
+  const [loading, setLoading] = useState(true);
+
+
+   useEffect(() => {
+    // Simulate data fetch
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <section className="relative overflow-hidden bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#020617] text-white py-28 px-6 lg:px-20">
       {/* Particle Background */}
